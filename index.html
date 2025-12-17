@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainPass - Smart Screen Time for Kids</title>
+    <meta name="description" content="Turn screen time into learning time. BrainPass requires kids to answer educational questions to unlock their apps.">
+    <style>
+        :root {
+            --primary: #0056b3;
+            --accent: #ff9800;
+            --light: #f4f7f6;
+            --text: #333;
+        }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 0; color: var(--text); }
+        
+        /* Navigation */
+        nav { padding: 20px; max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: bold; font-size: 1.5em; color: var(--primary); text-decoration: none; }
+        .nav-links a { margin-left: 20px; text-decoration: none; color: #666; font-size: 0.9em; }
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Hero Section */
+        .hero { background-color: var(--light); padding: 80px 20px; text-align: center; }
+        .hero h1 { font-size: 2.5em; margin-bottom: 15px; color: #222; }
+        .hero p { font-size: 1.2em; color: #555; max-width: 600px; margin: 0 auto 30px auto; }
+        .btn { display: inline-block; background-color: var(--primary); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; transition: transform 0.2s; }
+        .btn:hover { transform: translateY(-2px); background-color: #004494; }
+
+        /* Features Grid */
+        .features { max-width: 1000px; margin: 60px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+        .feature-card { text-align: center; padding: 20px; }
+        .icon { font-size: 2em; margin-bottom: 15px; display: block; }
+        .feature-card h3 { margin-bottom: 10px; color: #222; }
+
+        /* Footer */
+        footer { text-align: center; padding: 40px; background-color: #222; color: #888; font-size: 0.9em; margin-top: 60px; }
+        footer a { color: #ccc; text-decoration: none; }
+        footer a:hover { color: white; }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="#" class="logo">BrainPass</a>
+        <div class="nav-links">
+            <a href="#features">Features</a>
+            <a href="/privacy.html">Privacy Policy</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <h1>Turn Screen Time into Learning Time</h1>
+        <p>BrainPass locks the apps you choose and requires your child to answer math and science questions to unlock them.</p>
+        
+        <a href="#" class="btn">Download on Google Play</a>
+    </header>
+
+    <section class="features" id="features">
+        <div class="feature-card">
+            <span class="icon">🔒</span>
+            <h3>Smart Locking</h3>
+            <p>You choose which apps are locked. Social media? Games? It's up to you.</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">📚</span>
+            <h3>Education First</h3>
+            <p>Kids must answer Math, Science, or History questions to earn their screen time.</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🛡️</span>
+            <h3>Parent Control</h3>
+            <p>Set a secure PIN so only you can change the settings or difficulty level.</p>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2025 BrainPass. All rights reserved.</p>
+        <p>
+            <a href="/privacy.html">Privacy Policy</a> | 
+            <a href="mailto:support@brainpass.app">Contact Support</a>
+        </p>
+    </footer>
+
+</body>
+</html>
