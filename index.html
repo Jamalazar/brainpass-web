@@ -6,24 +6,28 @@
     <title>BrainPass - Smart Screen Time for Kids</title>
     <meta name="description" content="Turn screen time into learning time. BrainPass requires kids to answer educational questions to unlock their apps.">
     <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
         :root {
-            --primary: #00E676; /* Neon Green */
-            --dark: #0F172A;    /* Navy Blue */
-            --light: #F8FAFC;   /* Off White */
-            --text: #334155;    /* Slate Gray */
+            /* 🎨 THE NEW DARK THEME PALETTE */
+            --bg-body: #0F172A;      /* Deep App Navy */
+            --bg-card: #000000;      /* Pure Black (Like App Buttons) */
+            --primary: #00E676;      /* Neon Green */
+            --text-main: #F8FAFC;    /* Bright White */
+            --text-muted: #94A3B8;   /* Silver/Grey */
+            --border: #334155;       /* Subtle Border Color */
         }
         
         body { 
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
             line-height: 1.6; 
             margin: 0; 
-            color: var(--text); 
-            background: var(--light); 
+            color: var(--text-main); 
+            background: var(--bg-body); 
         }
         
-        /* Navigation */
+        /* --- NAVIGATION --- */
         nav { 
             padding: 20px; 
             max-width: 1100px; 
@@ -32,33 +36,65 @@
             justify-content: space-between; 
             align-items: center; 
         }
+
         .logo { 
-            font-weight: 800; 
-            font-size: 1.8em; 
-            color: var(--dark); 
             text-decoration: none; 
             display: flex; 
             align-items: center; 
-            gap: 10px;
+            gap: 15px; 
         }
-        .logo span { color: var(--primary); }
+
+        .logo-circle {
+            width: 52px;
+            height: 52px;
+            background: #000; 
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid var(--primary); 
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.4); 
+            overflow: hidden;
+        }
+        
+        .logo-circle img {
+            width: 85%;
+            height: auto;
+            object-fit: contain;
+        }
+
+        .logo-text-container {
+             font-weight: 900;
+             font-size: 1.8em;
+             display: flex;
+             gap: 2px;
+             letter-spacing: -1px;
+        }
+        
+        .brain-text, .pass-text {
+            color: var(--primary);
+            text-shadow: 0 0 20px rgba(0, 230, 118, 0.5);
+        }
+
         .nav-links a { 
             margin-left: 25px; 
             text-decoration: none; 
-            color: #64748B; 
+            color: var(--text-muted); 
             font-weight: 500; 
-            font-size: 1em; 
-            transition: color 0.3s;
+            transition: color 0.3s, text-shadow 0.3s;
         }
-        .nav-links a:hover { color: var(--primary); }
+        .nav-links a:hover { 
+            color: var(--primary); 
+            text-shadow: 0 0 10px rgba(0, 230, 118, 0.4);
+        }
 
-        /* Hero Section */
+        /* --- HERO SECTION --- */
         .hero { 
             display: flex; 
             align-items: center; 
             justify-content: space-between; 
             max-width: 1100px; 
-            margin: 40px auto 80px auto; 
+            margin: 60px auto 100px auto; 
             padding: 20px;
             flex-wrap: wrap;
         }
@@ -77,43 +113,57 @@
             justify-content: center;
         }
 
-        .hero h1 { font-size: 3em; line-height: 1.1; margin-bottom: 20px; color: var(--dark); }
-        .hero p { font-size: 1.25em; color: #64748B; margin-bottom: 30px; max-width: 500px; }
+        .hero h1 { 
+            font-size: 3.5em; 
+            line-height: 1.1; 
+            margin-bottom: 20px; 
+            color: var(--text-main); 
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+        }
         
-        /* Download Button */
+        .hero p { 
+            font-size: 1.25em; 
+            color: var(--text-muted); 
+            margin-bottom: 30px; 
+            max-width: 500px; 
+        }
+        
         .btn-download { 
             display: inline-flex; 
             align-items: center; 
-            background-color: var(--dark); 
-            color: white; 
+            background-color: var(--primary); 
+            color: #000; 
             padding: 15px 35px; 
             border-radius: 12px; 
             text-decoration: none; 
-            font-weight: bold; 
+            font-weight: 800; 
             transition: transform 0.2s, box-shadow 0.2s; 
-            box-shadow: 0 10px 20px rgba(0,230,118,0.3);
+            box-shadow: 0 0 20px rgba(0, 230, 118, 0.4);
         }
-        .btn-download:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(0,230,118,0.4); }
+        .btn-download:hover { 
+            transform: translateY(-3px); 
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.6); 
+            background-color: #33ff99;
+        }
         .btn-download i { margin-right: 10px; font-size: 1.5em; }
 
-        /* 📱 Tablet Frame Styles */
         .tablet-frame {
             position: relative;
-            background: #0F172A; /* Dark bezel */
-            padding: 12px;       /* Bezel thickness */
-            border-radius: 24px; /* Rounded corners */
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deep shadow */
+            background: #000; 
+            padding: 12px;       
+            border-radius: 24px; 
+            box-shadow: 0 0 60px -10px rgba(0, 230, 118, 0.15); 
             display: inline-block;
             max-width: 600px;    
             width: 100%;
+            border: 2px solid #333; 
         }
 
-        /* Slider Wrapper */
         .slider-wrapper {
             display: grid;
-            border-radius: 12px; /* Clip images to screen corners */
+            border-radius: 12px; 
             overflow: hidden;
-            border: 2px solid #334155; /* Inner border */
+            border: 1px solid #333; 
             position: relative;
             background: #000;
         }
@@ -125,22 +175,18 @@
             opacity: 0;       
             transition: opacity 0.8s ease-in-out; 
             display: block;
-            pointer-events: none; /* Let clicks pass through if needed */
         }
 
-        .slider-wrapper img.active {
-            opacity: 1;       
-            z-index: 2;
-        }
+        .slider-wrapper img.active { opacity: 1; z-index: 2; }
 
-        /* 🟢 New Slider Controls */
         .slider-btn {
             position: absolute;
             top: 50%;
             transform: translateY(-50%);
-            background: rgba(0, 0, 0, 0.3);
-            color: white;
-            border: none;
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--primary);
+            border: 1px solid rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
             cursor: pointer;
             z-index: 10;
             font-size: 18px;
@@ -150,10 +196,9 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: background 0.3s;
-            user-select: none;
+            transition: all 0.3s;
         }
-        .slider-btn:hover { background: rgba(0,0,0,0.8); }
+        .slider-btn:hover { background: var(--primary); color: #000; }
         .prev { left: 15px; }
         .next { right: 15px; }
 
@@ -169,63 +214,159 @@
         .dot {
             width: 10px;
             height: 10px;
-            background: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s;
         }
-        .dot:hover { background: rgba(255, 255, 255, 0.8); }
         .dot.active { 
             background: var(--primary); 
-            transform: scale(1.2);
-            box-shadow: 0 0 10px rgba(0,230,118,0.5);
+            box-shadow: 0 0 10px var(--primary);
         }
 
-        /* Camera Dot */
-        .tablet-frame::before {
-            content: '';
-            position: absolute;
-            left: 50%;
-            top: 6px;
-            transform: translateX(-50%);
-            width: 8px;
-            height: 8px;
-            background: #334155;
-            border-radius: 50%;
-            z-index: 5;
+        /* --- HOW IT WORKS --- */
+        .steps-section { 
+            padding: 80px 20px; 
+            background: linear-gradient(180deg, var(--bg-body) 0%, #0B1120 100%);
         }
+        .section-title { 
+            text-align: center; 
+            font-size: 2.5em; 
+            color: var(--text-main); 
+            margin-bottom: 60px; 
+            text-shadow: 0 0 20px rgba(0, 230, 118, 0.2);
+        }
+        .steps-grid { 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 30px; 
+        }
+        .step-card { 
+            text-align: center; 
+            padding: 40px 20px; 
+            background: var(--bg-card); 
+            border-radius: 24px;        
+            border: 1px solid #1E293B;  
+            transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s; 
+            position: relative;
+            overflow: hidden;
+        }
+        .step-card:hover { 
+            transform: translateY(-5px); 
+            border-color: var(--primary); 
+            box-shadow: 0 0 30px rgba(0, 230, 118, 0.15); 
+        }
+        .step-icon { 
+            width: 50px; 
+            height: 50px; 
+            background: rgba(0, 230, 118, 0.1); 
+            color: var(--primary); 
+            border: 1px solid var(--primary);
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.2em; 
+            margin: 0 auto 20px auto; 
+            font-weight: 800; 
+            box-shadow: 0 0 15px rgba(0, 230, 118, 0.2);
+        }
+        .step-card h3 { color: var(--text-main); margin-bottom: 10px; font-size: 1.4em;}
+        .step-card p { color: var(--text-muted); font-size: 0.95em; }
 
-        /* How it Works */
-        .steps-section { background: white; padding: 80px 20px; }
-        .section-title { text-align: center; font-size: 2.5em; color: var(--dark); margin-bottom: 60px; }
-        .steps-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
-        .step-card { text-align: center; padding: 30px; background: var(--light); border-radius: 20px; transition: transform 0.3s; }
-        .step-card:hover { transform: translateY(-5px); background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .step-icon { width: 60px; height: 60px; background: var(--primary); color: var(--dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5em; margin: 0 auto 20px auto; font-weight: bold; }
-        .step-card h3 { color: var(--dark); margin-bottom: 10px; }
-
-        /* Testimonials */
-        .testimonials-section { background: var(--light); padding: 60px 20px; text-align: center; border-top: 1px solid #e2e8f0; }
+        /* --- TESTIMONIALS --- */
+        .testimonials-section { 
+            background: #0B1120; 
+            padding: 60px 20px; 
+            text-align: center; 
+            border-top: 1px solid #1E293B; 
+        }
         .testimonial-grid { max-width: 800px; margin: 0 auto; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
-        .testimonial-card { padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+        .testimonial-card { 
+            padding: 30px; 
+            background: #1E293B; 
+            border-radius: 16px; 
+            border: 1px solid #334155;
+        }
+        .testimonial-card p { color: #CBD5E1; font-style: italic; margin-bottom: 15px; }
+        .testimonial-card strong { color: var(--primary); }
 
-        /* FAQ Section */
+        /* --- 🆕 EXPANDABLE FAQ SECTION --- */
         .faq-section { max-width: 800px; margin: 80px auto; padding: 0 20px; }
-        .faq-item { background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #eee; }
-        .faq-question { font-weight: bold; font-size: 1.2em; color: var(--dark); margin-bottom: 10px; display: block; }
-        .faq-answer { color: #64748B; }
-
-        /* Footer */
-        footer { text-align: center; padding: 60px 20px; background-color: var(--dark); color: #94A3B8; font-size: 0.9em; }
-        footer a { color: var(--primary); text-decoration: none; }
-        footer a:hover { text-decoration: underline; }
         
-        /* Mobile Tweaks */
+        .faq-item { 
+            background: #1E293B; 
+            border-radius: 12px; 
+            padding: 20px 25px; 
+            margin-bottom: 15px; 
+            border: 1px solid #334155; 
+            cursor: pointer; /* Indicates it's clickable */
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: var(--primary);
+        }
+
+        /* The Question Row */
+        .faq-question { 
+            font-weight: bold; 
+            font-size: 1.2em; 
+            color: var(--text-main); 
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        /* The 'Plus' Icon */
+        .faq-question::after {
+            content: '+';
+            font-size: 1.5em;
+            color: var(--primary);
+            transition: transform 0.3s;
+        }
+
+        /* Rotate icon when active */
+        .faq-item.active .faq-question::after {
+            transform: rotate(45deg);
+        }
+
+        /* The Hidden Answer */
+        .faq-answer { 
+            color: var(--text-muted); 
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.4s ease-in-out;
+            margin-top: 0;
+        }
+
+        /* Show Answer when active */
+        .faq-item.active .faq-answer {
+            max-height: 300px; /* Big enough to fit text */
+            opacity: 1;
+            margin-top: 15px;
+        }
+
+
+        /* --- FOOTER --- */
+        footer { 
+            text-align: center; 
+            padding: 60px 20px; 
+            background-color: #000; 
+            color: #64748B; 
+            font-size: 0.9em; 
+            border-top: 1px solid #1E293B;
+        }
+        footer a { color: var(--primary); text-decoration: none; }
+        footer a:hover { text-decoration: underline; text-shadow: 0 0 10px var(--primary); }
+        
         @media (max-width: 768px) {
-            .hero { text-align: center; flex-direction: column-reverse; }
+            .hero { text-align: center; flex-direction: column-reverse; margin-top: 20px;}
             .hero-text { margin-top: 40px; padding-right: 0; }
             .hero h1 { font-size: 2.2em; }
-            /* Hide arrows on mobile to keep it clean, dots are enough */
             .slider-btn { display: none; }
         }
     </style>
@@ -233,7 +374,15 @@
 <body>
 
     <nav>
-        <a href="#" class="logo">Brain<span>Pass</span></a>
+        <a href="#" class="logo">
+            <div class="logo-circle">
+                <img src="brain.png" alt="BrainPass Icon">
+            </div>
+            <div class="logo-text-container">
+                <span class="brain-text">Brain</span><span class="pass-text">Pass</span>
+            </div>
+        </a>
+        
         <div class="nav-links">
             <a href="#how-it-works">How it Works</a>
             <a href="#faq">FAQ</a>
@@ -259,9 +408,7 @@
 
                     <button class="slider-btn prev" onclick="moveSlide(-1)">&#10094;</button>
                     <button class="slider-btn next" onclick="moveSlide(1)">&#10095;</button>
-
-                    <div class="dots-container" id="dotsContainer">
-                        </div>
+                    <div class="dots-container" id="dotsContainer"></div>
                 </div>
             </div>
         </div>
@@ -289,35 +436,45 @@
     </section>
 
     <section class="testimonials-section">
-        <h2 style="color: var(--dark); margin-bottom: 40px;">Parents Love BrainPass</h2>
+        <h2 style="color: var(--text-main); margin-bottom: 40px;">Parents Love BrainPass</h2>
         <div class="testimonial-grid">
             <div class="testimonial-card">
-                <p style="color: #475569; font-style: italic; margin-bottom: 15px;">"Finally, my son actually does math before watching YouTube. It's genius."</p>
-                <strong style="color: var(--dark);">- Sarah M., Mom of 2</strong>
+                <p>"Finally, my son actually does math before watching YouTube. It's genius."</p>
+                <strong>- Sarah M., Mom of 2</strong>
             </div>
             <div class="testimonial-card">
-                <p style="color: #475569; font-style: italic; margin-bottom: 15px;">"I love the report card feature. I can actually see what they are learning."</p>
-                <strong style="color: var(--dark);">- Mike T., Beta Tester</strong>
+                <p>"I love the report card feature. I can actually see what they are learning."</p>
+                <strong>- Mike T., Beta Tester</strong>
             </div>
         </div>
     </section>
 
     <section id="faq" class="faq-section">
-        <h2 class="section-title">Common Questions</h2>
+        <h2 class="section-title">Frequently Asked Questions</h2>
         
         <div class="faq-item">
-            <span class="faq-question">Is it safe for my child?</span>
-            <p class="faq-answer">Absolutely. BrainPass runs locally on your device. We don't sell your data or track your child's location.</p>
+            <div class="faq-question">I forgot my PIN. What do I do?</div>
+            <div class="faq-answer">Tap the 'Forgot PIN?' link on the lock screen. You will be asked to answer the Security Question you set up in the 'Security & Recovery' section.</div>
         </div>
 
         <div class="faq-item">
-            <span class="faq-question">What happens if they get stuck?</span>
-            <p class="faq-answer">Our new "Story Mode" encourages reading comprehension, and we provide hints. Parents can also unlock the device anytime with a PIN.</p>
+            <div class="faq-question">Can I turn off specific subjects?</div>
+            <div class="faq-answer">Yes! Scroll up to the 'Focus Subjects' section. You can toggle off any subject (like Math or Reading) that you don't want to appear on the lock screen.</div>
         </div>
 
         <div class="faq-item">
-            <span class="faq-question">Can I see what they are learning?</span>
-            <p class="faq-answer">Yes! The Parent Dashboard shows you exactly which questions they answered correctly and where they might need help.</p>
+            <div class="faq-question">Why doesn't the app lock immediately?</div>
+            <div class="faq-answer">The app uses a 'Lock Frequency' timer (e.g., 15 minutes) so it doesn't interrupt your child too often. You can adjust this timer in the settings above.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">A question has a mistake. How do I report it?</div>
+            <div class="faq-answer">Please take a screenshot of the question (showing the ID in the bottom corner) and email it to our support team at <a href="mailto:support@brainpass.app" style="color:var(--primary)">support@brainpass.app</a>.</div>
+        </div>
+
+        <div class="faq-item">
+            <div class="faq-question">Is this test</div>
+            <div class="faq-answer">Yes</div>
         </div>
     </section>
 
@@ -331,66 +488,72 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function() {
+            /* 1. SLIDER LOGIC */
             const slides = document.querySelectorAll('.slide');
             const dotsContainer = document.getElementById('dotsContainer');
             let currentSlide = 0;
             let slideInterval;
 
-            // 1. Create Dots based on number of slides
-            slides.forEach((_, index) => {
-                const dot = document.createElement('span');
-                dot.classList.add('dot');
-                if (index === 0) dot.classList.add('active');
-                dot.onclick = () => goToSlide(index); // Add click event
-                dotsContainer.appendChild(dot);
-            });
-
-            const dots = document.querySelectorAll('.dot');
-
-            // 2. Main function to show a specific slide
-            function showSlide(index) {
-                // Remove active class from current
-                slides[currentSlide].classList.remove('active');
-                dots[currentSlide].classList.remove('active');
-
-                // Update index (handle wrap-around)
-                if (index >= slides.length) currentSlide = 0;
-                else if (index < 0) currentSlide = slides.length - 1;
-                else currentSlide = index;
-
-                // Add active class to new
-                slides[currentSlide].classList.add('active');
-                dots[currentSlide].classList.add('active');
-            }
-
-            // 3. Helper for arrows
-            window.moveSlide = function(step) {
-                showSlide(currentSlide + step);
-                resetTimer(); // Stop auto-rotation for a moment
-            }
-
-            // 4. Helper for dots
-            function goToSlide(index) {
-                showSlide(index);
-                resetTimer();
-            }
-
-            // 5. Auto-Rotation Logic
-            function startTimer() {
-                slideInterval = setInterval(() => {
-                    showSlide(currentSlide + 1);
-                }, 4000); // 4 seconds
-            }
-
-            function resetTimer() {
-                clearInterval(slideInterval);
-                startTimer();
-            }
-
-            // Start it!
             if (slides.length > 0) {
+                slides.forEach((_, index) => {
+                    const dot = document.createElement('span');
+                    dot.classList.add('dot');
+                    if (index === 0) dot.classList.add('active');
+                    dot.onclick = () => goToSlide(index);
+                    dotsContainer.appendChild(dot);
+                });
+                
+                const dots = document.querySelectorAll('.dot');
                 startTimer();
+
+                function showSlide(index) {
+                    slides[currentSlide].classList.remove('active');
+                    dots[currentSlide].classList.remove('active');
+
+                    if (index >= slides.length) currentSlide = 0;
+                    else if (index < 0) currentSlide = slides.length - 1;
+                    else currentSlide = index;
+
+                    slides[currentSlide].classList.add('active');
+                    dots[currentSlide].classList.add('active');
+                }
+
+                window.moveSlide = function(step) {
+                    showSlide(currentSlide + step);
+                    resetTimer();
+                }
+
+                function goToSlide(index) {
+                    showSlide(index);
+                    resetTimer();
+                }
+
+                function startTimer() {
+                    slideInterval = setInterval(() => {
+                        showSlide(currentSlide + 1);
+                    }, 4000);
+                }
+
+                function resetTimer() {
+                    clearInterval(slideInterval);
+                    startTimer();
+                }
             }
+
+            /* 2. 🆕 ACCORDION LOGIC */
+            const faqItems = document.querySelectorAll('.faq-item');
+            
+            faqItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    // Optional: Close others when one opens (Auto-collapse)
+                    // faqItems.forEach(otherItem => {
+                    //     if(otherItem !== item) otherItem.classList.remove('active');
+                    // });
+
+                    // Toggle current one
+                    item.classList.toggle('active');
+                });
+            });
         });
     </script>
 
