@@ -6,23 +6,53 @@
     <title>BrainPass - Smart Screen Time for Kids</title>
     <meta name="description" content="Turn screen time into learning time. BrainPass requires kids to answer educational questions to unlock their apps.">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
         :root {
-            --primary: #00E676; /* Neon Green from your App */
-            --dark: #0F172A;    /* Navy from your App */
-            --light: #F8FAFC;
-            --text: #334155;
+            --primary: #00E676; /* Neon Green */
+            --dark: #0F172A;    /* Navy Blue */
+            --light: #F8FAFC;   /* Off White */
+            --text: #334155;    /* Slate Gray */
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 0; color: var(--text); background: var(--light); }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            line-height: 1.6; 
+            margin: 0; 
+            color: var(--text); 
+            background: var(--light); 
+        }
         
         /* Navigation */
-        nav { padding: 20px; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; font-size: 1.8em; color: var(--dark); text-decoration: none; display: flex; align-items: center; gap: 10px;}
+        nav { 
+            padding: 20px; 
+            max-width: 1100px; 
+            margin: 0 auto; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .logo { 
+            font-weight: 800; 
+            font-size: 1.8em; 
+            color: var(--dark); 
+            text-decoration: none; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+        }
         .logo span { color: var(--primary); }
-        .nav-links a { margin-left: 25px; text-decoration: none; color: #64748B; font-weight: 500; font-size: 1em; transition: color 0.3s;}
+        .nav-links a { 
+            margin-left: 25px; 
+            text-decoration: none; 
+            color: #64748B; 
+            font-weight: 500; 
+            font-size: 1em; 
+            transition: color 0.3s;
+        }
         .nav-links a:hover { color: var(--primary); }
 
-        /* Hero Section */
+        /* Hero Section (Updated for Tablet) */
         .hero { 
             display: flex; 
             align-items: center; 
@@ -32,13 +62,25 @@
             padding: 20px;
             flex-wrap: wrap;
         }
-        .hero-text { flex: 1; min-width: 300px; text-align: left; }
-        .hero-image { flex: 1; min-width: 300px; text-align: center; }
-        .hero-image img { max-width: 280px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 8px solid var(--dark); }
+        .hero-text { 
+            flex: 1; 
+            min-width: 300px; 
+            text-align: left; 
+            padding-right: 40px; /* Space between text and tablet */
+        }
+        .hero-image { 
+            flex: 1.2; 
+            min-width: 300px; 
+            text-align: center; 
+            position: relative;
+            display: flex;
+            justify-content: center;
+        }
 
         .hero h1 { font-size: 3em; line-height: 1.1; margin-bottom: 20px; color: var(--dark); }
         .hero p { font-size: 1.25em; color: #64748B; margin-bottom: 30px; max-width: 500px; }
         
+        /* Download Button */
         .btn-download { 
             display: inline-flex; 
             align-items: center; 
@@ -54,15 +96,49 @@
         .btn-download:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(0,230,118,0.4); }
         .btn-download i { margin-right: 10px; font-size: 1.5em; }
 
-        /* How it Works (Steps) */
+        /* 📱 Tablet Frame Styles */
+        .tablet-frame {
+            position: relative;
+            background: #0F172A; /* Dark bezel */
+            padding: 12px;       /* Bezel thickness */
+            border-radius: 24px; /* Rounded corners */
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deep shadow */
+            display: inline-block;
+        }
+        .tablet-frame img {
+            display: block;
+            width: 100%;
+            max-width: 600px; /* Max width for the tablet */
+            height: auto;
+            border-radius: 12px; /* Inner screen corners */
+            border: 2px solid #334155; /* Subtle inner border */
+        }
+        /* Camera Dot */
+        .tablet-frame::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 6px;
+            transform: translateX(-50%);
+            width: 8px;
+            height: 8px;
+            background: #334155;
+            border-radius: 50%;
+        }
+
+        /* How it Works */
         .steps-section { background: white; padding: 80px 20px; }
         .section-title { text-align: center; font-size: 2.5em; color: var(--dark); margin-bottom: 60px; }
-        
         .steps-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
         .step-card { text-align: center; padding: 30px; background: var(--light); border-radius: 20px; transition: transform 0.3s; }
         .step-card:hover { transform: translateY(-5px); background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
         .step-icon { width: 60px; height: 60px; background: var(--primary); color: var(--dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5em; margin: 0 auto 20px auto; font-weight: bold; }
         .step-card h3 { color: var(--dark); margin-bottom: 10px; }
+
+        /* Testimonials */
+        .testimonials-section { background: var(--light); padding: 60px 20px; text-align: center; border-top: 1px solid #e2e8f0; }
+        .testimonial-grid { max-width: 800px; margin: 0 auto; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+        .testimonial-card { padding: 30px; background: white; border-radius: 16px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
 
         /* FAQ Section */
         .faq-section { max-width: 800px; margin: 80px auto; padding: 0 20px; }
@@ -78,7 +154,7 @@
         /* Mobile Tweaks */
         @media (max-width: 768px) {
             .hero { text-align: center; flex-direction: column-reverse; }
-            .hero-text { margin-top: 40px; }
+            .hero-text { margin-top: 40px; padding-right: 0; }
             .hero h1 { font-size: 2.2em; }
         }
     </style>
@@ -99,13 +175,15 @@
             <h1>Unlock Apps with<br>Brain Power.</h1>
             <p>Turn mindless scrolling into learning moments. BrainPass locks the apps you choose and requires your child to answer math, science, and reading questions to unlock them.</p>
             
-            <a href="#" class="btn-download">
+            <a href="https://play.google.com/store/apps/details?id=com.screenlearn.screenlearn" class="btn-download">
                 <i class="fab fa-google-play"></i>
                 <span>Get it on Google Play</span>
             </a>
         </div>
         <div class="hero-image">
-            <img src="https://via.placeholder.com/280x580/0F172A/00E676?text=App+Screenshot" alt="BrainPass App Interface">
+            <div class="tablet-frame">
+                <img src="dashboard.jpg" alt="BrainPass Dashboard Interface">
+            </div>
         </div>
     </header>
 
@@ -130,6 +208,20 @@
         </div>
     </section>
 
+    <section class="testimonials-section">
+        <h2 style="color: var(--dark); margin-bottom: 40px;">Parents Love BrainPass</h2>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <p style="color: #475569; font-style: italic; margin-bottom: 15px;">"Finally, my son actually does math before watching YouTube. It's genius."</p>
+                <strong style="color: var(--dark);">- Sarah M., Mom of 2</strong>
+            </div>
+            <div class="testimonial-card">
+                <p style="color: #475569; font-style: italic; margin-bottom: 15px;">"I love the report card feature. I can actually see what they are learning."</p>
+                <strong style="color: var(--dark);">- Mike T., Beta Tester</strong>
+            </div>
+        </div>
+    </section>
+
     <section id="faq" class="faq-section">
         <h2 class="section-title">Common Questions</h2>
         
@@ -148,19 +240,6 @@
             <p class="faq-answer">Yes! The Parent Dashboard shows you exactly which questions they answered correctly and where they might need help.</p>
         </div>
     </section>
-    <section style="background: white; padding: 60px 20px; text-align: center;">
-    <h2 style="color: #0F172A; margin-bottom: 40px;">Parents Love BrainPass</h2>
-    <div style="max-width: 800px; margin: 0 auto; display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
-        <div style="padding: 20px; background: #F8FAFC; border-radius: 12px;">
-            <p style="color: #475569; font-style: italic;">"Finally, my son actually does math before watching YouTube. It's genius."</p>
-            <strong style="color: #0F172A;">- Sarah M., Mom of 2</strong>
-        </div>
-        <div style="padding: 20px; background: #F8FAFC; border-radius: 12px;">
-            <p style="color: #475569; font-style: italic;">"I love the report card feature. I can actually see what they are learning."</p>
-            <strong style="color: #0F172A;">- Mike T., Beta Tester</strong>
-        </div>
-    </div>
-</section>
 
     <footer>
         <p>&copy; 2026 BrainPass. All rights reserved.</p>
@@ -172,4 +251,3 @@
 
 </body>
 </html>
-
