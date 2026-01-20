@@ -52,7 +52,7 @@
         }
         .nav-links a:hover { color: var(--primary); }
 
-        /* Hero Section (Updated for Tablet) */
+        /* Hero Section */
         .hero { 
             display: flex; 
             align-items: center; 
@@ -66,7 +66,7 @@
             flex: 1; 
             min-width: 300px; 
             text-align: left; 
-            padding-right: 40px; /* Space between text and tablet */
+            padding-right: 40px; 
         }
         .hero-image { 
             flex: 1.2; 
@@ -104,15 +104,83 @@
             border-radius: 24px; /* Rounded corners */
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); /* Deep shadow */
             display: inline-block;
-        }
-        .tablet-frame img {
-            display: block;
+            max-width: 600px;    
             width: 100%;
-            max-width: 600px; /* Max width for the tablet */
-            height: auto;
-            border-radius: 12px; /* Inner screen corners */
-            border: 2px solid #334155; /* Subtle inner border */
         }
+
+        /* Slider Wrapper */
+        .slider-wrapper {
+            display: grid;
+            border-radius: 12px; /* Clip images to screen corners */
+            overflow: hidden;
+            border: 2px solid #334155; /* Inner border */
+            position: relative;
+            background: #000;
+        }
+
+        .slider-wrapper img {
+            grid-area: 1 / 1; 
+            width: 100%;      
+            height: auto;
+            opacity: 0;       
+            transition: opacity 0.8s ease-in-out; 
+            display: block;
+            pointer-events: none; /* Let clicks pass through if needed */
+        }
+
+        .slider-wrapper img.active {
+            opacity: 1;       
+            z-index: 2;
+        }
+
+        /* 🟢 New Slider Controls */
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.3);
+            color: white;
+            border: none;
+            cursor: pointer;
+            z-index: 10;
+            font-size: 18px;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+            user-select: none;
+        }
+        .slider-btn:hover { background: rgba(0,0,0,0.8); }
+        .prev { left: 15px; }
+        .next { right: 15px; }
+
+        .dots-container {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .dot:hover { background: rgba(255, 255, 255, 0.8); }
+        .dot.active { 
+            background: var(--primary); 
+            transform: scale(1.2);
+            box-shadow: 0 0 10px rgba(0,230,118,0.5);
+        }
+
         /* Camera Dot */
         .tablet-frame::before {
             content: '';
@@ -124,6 +192,7 @@
             height: 8px;
             background: #334155;
             border-radius: 50%;
+            z-index: 5;
         }
 
         /* How it Works */
@@ -156,6 +225,8 @@
             .hero { text-align: center; flex-direction: column-reverse; }
             .hero-text { margin-top: 40px; padding-right: 0; }
             .hero h1 { font-size: 2.2em; }
+            /* Hide arrows on mobile to keep it clean, dots are enough */
+            .slider-btn { display: none; }
         }
     </style>
 </head>
@@ -182,7 +253,16 @@
         </div>
         <div class="hero-image">
             <div class="tablet-frame">
-                <img src="dashboard.jpg" alt="BrainPass Dashboard Interface">
+                <div class="slider-wrapper">
+                    <img src="dashboard.jpg" class="slide active" alt="BrainPass Parent Dashboard">
+                    <img src="quiz.jpg" class="slide" alt="BrainPass Quiz Screen">
+
+                    <button class="slider-btn prev" onclick="moveSlide(-1)">&#10094;</button>
+                    <button class="slider-btn next" onclick="moveSlide(1)">&#10095;</button>
+
+                    <div class="dots-container" id="dotsContainer">
+                        </div>
+                </div>
             </div>
         </div>
     </header>
@@ -248,6 +328,71 @@
             <a href="mailto:support@brainpass.app">support@brainpass.app</a>
         </p>
     </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            const slides = document.querySelectorAll('.slide');
+            const dotsContainer = document.getElementById('dotsContainer');
+            let currentSlide = 0;
+            let slideInterval;
+
+            // 1. Create Dots based on number of slides
+            slides.forEach((_, index) => {
+                const dot = document.createElement('span');
+                dot.classList.add('dot');
+                if (index === 0) dot.classList.add('active');
+                dot.onclick = () => goToSlide(index); // Add click event
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = document.querySelectorAll('.dot');
+
+            // 2. Main function to show a specific slide
+            function showSlide(index) {
+                // Remove active class from current
+                slides[currentSlide].classList.remove('active');
+                dots[currentSlide].classList.remove('active');
+
+                // Update index (handle wrap-around)
+                if (index >= slides.length) currentSlide = 0;
+                else if (index < 0) currentSlide = slides.length - 1;
+                else currentSlide = index;
+
+                // Add active class to new
+                slides[currentSlide].classList.add('active');
+                dots[currentSlide].classList.add('active');
+            }
+
+            // 3. Helper for arrows
+            window.moveSlide = function(step) {
+                showSlide(currentSlide + step);
+                resetTimer(); // Stop auto-rotation for a moment
+            }
+
+            // 4. Helper for dots
+            function goToSlide(index) {
+                showSlide(index);
+                resetTimer();
+            }
+
+            // 5. Auto-Rotation Logic
+            function startTimer() {
+                slideInterval = setInterval(() => {
+                    showSlide(currentSlide + 1);
+                }, 4000); // 4 seconds
+            }
+
+            function resetTimer() {
+                clearInterval(slideInterval);
+                startTimer();
+            }
+
+            // Start it!
+            if (slides.length > 0) {
+                startTimer();
+            }
+        });
+    </script>
 
 </body>
 </html>
