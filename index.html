@@ -5,80 +5,155 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BrainPass - Smart Screen Time for Kids</title>
     <meta name="description" content="Turn screen time into learning time. BrainPass requires kids to answer educational questions to unlock their apps.">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
-            --primary: #0056b3;
-            --accent: #ff9800;
-            --light: #f4f7f6;
-            --text: #333;
+            --primary: #00E676; /* Neon Green from your App */
+            --dark: #0F172A;    /* Navy from your App */
+            --light: #F8FAFC;
+            --text: #334155;
         }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 0; color: var(--text); }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; margin: 0; color: var(--text); background: var(--light); }
         
         /* Navigation */
-        nav { padding: 20px; max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: bold; font-size: 1.5em; color: var(--primary); text-decoration: none; }
-        .nav-links a { margin-left: 20px; text-decoration: none; color: #666; font-size: 0.9em; }
+        nav { padding: 20px; max-width: 1100px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-weight: 800; font-size: 1.8em; color: var(--dark); text-decoration: none; display: flex; align-items: center; gap: 10px;}
+        .logo span { color: var(--primary); }
+        .nav-links a { margin-left: 25px; text-decoration: none; color: #64748B; font-weight: 500; font-size: 1em; transition: color 0.3s;}
         .nav-links a:hover { color: var(--primary); }
 
         /* Hero Section */
-        .hero { background-color: var(--light); padding: 80px 20px; text-align: center; }
-        .hero h1 { font-size: 2.5em; margin-bottom: 15px; color: #222; }
-        .hero p { font-size: 1.2em; color: #555; max-width: 600px; margin: 0 auto 30px auto; }
-        .btn { display: inline-block; background-color: var(--primary); color: white; padding: 12px 30px; border-radius: 50px; text-decoration: none; font-weight: bold; transition: transform 0.2s; }
-        .btn:hover { transform: translateY(-2px); background-color: #004494; }
+        .hero { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            max-width: 1100px; 
+            margin: 40px auto 80px auto; 
+            padding: 20px;
+            flex-wrap: wrap;
+        }
+        .hero-text { flex: 1; min-width: 300px; text-align: left; }
+        .hero-image { flex: 1; min-width: 300px; text-align: center; }
+        .hero-image img { max-width: 280px; border-radius: 20px; box-shadow: 0 20px 40px rgba(0,0,0,0.2); border: 8px solid var(--dark); }
 
-        /* Features Grid */
-        .features { max-width: 1000px; margin: 60px auto; padding: 0 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
-        .feature-card { text-align: center; padding: 20px; }
-        .icon { font-size: 2em; margin-bottom: 15px; display: block; }
-        .feature-card h3 { margin-bottom: 10px; color: #222; }
+        .hero h1 { font-size: 3em; line-height: 1.1; margin-bottom: 20px; color: var(--dark); }
+        .hero p { font-size: 1.25em; color: #64748B; margin-bottom: 30px; max-width: 500px; }
+        
+        .btn-download { 
+            display: inline-flex; 
+            align-items: center; 
+            background-color: var(--dark); 
+            color: white; 
+            padding: 15px 35px; 
+            border-radius: 12px; 
+            text-decoration: none; 
+            font-weight: bold; 
+            transition: transform 0.2s, box-shadow 0.2s; 
+            box-shadow: 0 10px 20px rgba(0,230,118,0.3);
+        }
+        .btn-download:hover { transform: translateY(-3px); box-shadow: 0 15px 25px rgba(0,230,118,0.4); }
+        .btn-download i { margin-right: 10px; font-size: 1.5em; }
+
+        /* How it Works (Steps) */
+        .steps-section { background: white; padding: 80px 20px; }
+        .section-title { text-align: center; font-size: 2.5em; color: var(--dark); margin-bottom: 60px; }
+        
+        .steps-grid { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+        .step-card { text-align: center; padding: 30px; background: var(--light); border-radius: 20px; transition: transform 0.3s; }
+        .step-card:hover { transform: translateY(-5px); background: #fff; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .step-icon { width: 60px; height: 60px; background: var(--primary); color: var(--dark); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5em; margin: 0 auto 20px auto; font-weight: bold; }
+        .step-card h3 { color: var(--dark); margin-bottom: 10px; }
+
+        /* FAQ Section */
+        .faq-section { max-width: 800px; margin: 80px auto; padding: 0 20px; }
+        .faq-item { background: white; border-radius: 12px; padding: 25px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid #eee; }
+        .faq-question { font-weight: bold; font-size: 1.2em; color: var(--dark); margin-bottom: 10px; display: block; }
+        .faq-answer { color: #64748B; }
 
         /* Footer */
-        footer { text-align: center; padding: 40px; background-color: #222; color: #888; font-size: 0.9em; margin-top: 60px; }
-        footer a { color: #ccc; text-decoration: none; }
-        footer a:hover { color: white; }
+        footer { text-align: center; padding: 60px 20px; background-color: var(--dark); color: #94A3B8; font-size: 0.9em; }
+        footer a { color: var(--primary); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
+        
+        /* Mobile Tweaks */
+        @media (max-width: 768px) {
+            .hero { text-align: center; flex-direction: column-reverse; }
+            .hero-text { margin-top: 40px; }
+            .hero h1 { font-size: 2.2em; }
+        }
     </style>
 </head>
 <body>
 
     <nav>
-        <a href="#" class="logo">BrainPass</a>
+        <a href="#" class="logo">Brain<span>Pass</span></a>
         <div class="nav-links">
-            <a href="#features">Features</a>
-            <a href="/privacy.html">Privacy Policy</a>
+            <a href="#how-it-works">How it Works</a>
+            <a href="#faq">FAQ</a>
+            <a href="/privacy.html">Privacy</a>
         </div>
     </nav>
 
     <header class="hero">
-        <h1>Turn Screen Time into Learning Time</h1>
-        <p>BrainPass locks the apps you choose and requires your child to answer math and science questions to unlock them.</p>
-        
-        <a href="#" class="btn">Download on Google Play</a>
+        <div class="hero-text">
+            <h1>Unlock Apps with<br>Brain Power.</h1>
+            <p>Turn mindless scrolling into learning moments. BrainPass locks the apps you choose and requires your child to answer math, science, and reading questions to unlock them.</p>
+            
+            <a href="#" class="btn-download">
+                <i class="fab fa-google-play"></i>
+                <span>Get it on Google Play</span>
+            </a>
+        </div>
+        <div class="hero-image">
+            <img src="https://via.placeholder.com/280x580/0F172A/00E676?text=App+Screenshot" alt="BrainPass App Interface">
+        </div>
     </header>
 
-    <section class="features" id="features">
-        <div class="feature-card">
-            <span class="icon">🔒</span>
-            <h3>Smart Locking</h3>
-            <p>You choose which apps are locked. Social media? Games? It's up to you.</p>
+    <section id="how-it-works" class="steps-section">
+        <h2 class="section-title">How it Works</h2>
+        <div class="steps-grid">
+            <div class="step-card">
+                <div class="step-icon">1</div>
+                <h3>Choose Apps</h3>
+                <p>Select which apps to lock (like YouTube, Roblox, or TikTok).</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">2</div>
+                <h3>Set Grade Level</h3>
+                <p>Customize the difficulty from Kindergarten to Grade 8.</p>
+            </div>
+            <div class="step-card">
+                <div class="step-icon">3</div>
+                <h3>Learn to Play</h3>
+                <p>Your child answers curriculum-aligned questions to unlock their fun!</p>
+            </div>
         </div>
-        <div class="feature-card">
-            <span class="icon">📚</span>
-            <h3>Education First</h3>
-            <p>Kids must answer Math, Science, or History questions to earn their screen time.</p>
+    </section>
+
+    <section id="faq" class="faq-section">
+        <h2 class="section-title">Common Questions</h2>
+        
+        <div class="faq-item">
+            <span class="faq-question">Is it safe for my child?</span>
+            <p class="faq-answer">Absolutely. BrainPass runs locally on your device. We don't sell your data or track your child's location.</p>
         </div>
-        <div class="feature-card">
-            <span class="icon">🛡️</span>
-            <h3>Parent Control</h3>
-            <p>Set a secure PIN so only you can change the settings or difficulty level.</p>
+
+        <div class="faq-item">
+            <span class="faq-question">What happens if they get stuck?</span>
+            <p class="faq-answer">Our new "Story Mode" encourages reading comprehension, and we provide hints. Parents can also unlock the device anytime with a PIN.</p>
+        </div>
+
+        <div class="faq-item">
+            <span class="faq-question">Can I see what they are learning?</span>
+            <p class="faq-answer">Yes! The Parent Dashboard shows you exactly which questions they answered correctly and where they might need help.</p>
         </div>
     </section>
 
     <footer>
-        <p>&copy; 2025 BrainPass. All rights reserved.</p>
+        <p>&copy; 2026 BrainPass. All rights reserved.</p>
         <p>
             <a href="/privacy.html">Privacy Policy</a> | 
-            <a href="mailto:support@brainpass.app">Contact Support</a>
+            <a href="mailto:support@brainpass.app">support@brainpass.app</a>
         </p>
     </footer>
 
