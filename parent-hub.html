@@ -52,6 +52,7 @@
             const payload = {
                 brainpass_id: id,
                 settings: {
+					point_reward: parseInt(document.getElementById('points').value),
                     total_points: parseInt(document.getElementById('points').value),
                     lock_interval: parseInt(document.getElementById('interval').value),
                     current_grade: document.getElementById('grade').value,
