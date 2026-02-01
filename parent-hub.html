@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainPass Parent Hub</title>
+    <style>
+        body { font-family: sans-serif; background: #0f172a; color: white; padding: 20px; max-width: 500px; margin: auto; }
+        .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #334155; }
+        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; box-sizing: border-box; }
+        input { background: #0f172a; color: white; border: 1px solid #40c4ff; }
+        button { background: #00e676; color: black; font-weight: bold; cursor: pointer; }
+        .unlock-btn { background: #40c4ff; margin-top: 20px; }
+        label { font-size: 0.8rem; color: #94a3b8; }
+    </style>
+</head>
+<body>
+    <h2>Parental Hub</h2>
+    
+    <div class="card">
+        <label>Child's BrainPass ID</label>
+        <input type="text" id="bpId" placeholder="e.g. BP-AVF8NZ" value="BP-AVF8NZ">
+    </div>
+
+    <div class="card">
+        <label>Total Points (Adjustment Base)</label>
+        <input type="number" id="points" value="1000">
+
+        <label>Lock Interval (Minutes)</label>
+        <select id="interval">
+            <option value="15">15 Minutes</option>
+            <option value="30">30 Minutes</option>
+            <option value="60">1 Hour</option>
+        </select>
+
+        <label>Grade Level</label>
+        <select id="grade">
+            <option value="Grade 4">Grade 4</option>
+            <option value="Grade 5" selected>Grade 5</option>
+            <option value="Grade 6">Grade 6</option>
+        </select>
+
+        <button onclick="sendUpdate(false)">UPDATE SETTINGS</button>
+        <button class="unlock-btn" onclick="sendUpdate(true)">🔓 UNLOCK CHILD DEVICE NOW</button>
+    </div>
+
+    <script>
+        const API_URL = "https://ywql4czvca.execute-api.us-east-1.amazonaws.com/prod/BrainPass_SettingsWriter"; // 🟢 PASTE YOUR URL HERE
+
+        async function sendUpdate(isUnlockRequest) {
+            const id = document.getElementById('bpId').value;
+            const payload = {
+                brainpass_id: id,
+                settings: {
+                    total_points: parseInt(document.getElementById('points').value),
+                    lock_interval: parseInt(document.getElementById('interval').value),
+                    current_grade: document.getElementById('grade').value,
+                    is_app_active: true,
+                    school_code: "",
+                    remote_unlock_trigger: isUnlockRequest
+                }
+            };
+
+            try {
+                const response = await fetch(API_URL, {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/json' // Crucial for matching CORS headers
+    },
+    body: JSON.stringify(payload)
+});
+                const data = await response.json();
+                alert(isUnlockRequest ? "Unlock Command Sent!" : "Settings Updated!");
+            } catch (err) {
+                alert("Error connecting to Lambda: " + err.message);
+            }
+        }
+    </script>
+</body>
+</html>
