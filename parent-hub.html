@@ -243,16 +243,17 @@
 
     // 3. Final Sync to AWS Lambda
     async function syncToDevice(isUnlock = false) {
-        const id = document.getElementById('bpId').value.trim();
-        
-        const payload = {
-            brainpass_id: id,
-            settings: {
-                ...deviceState,
-                is_app_active: document.getElementById('isAppActive').checked,
-                remote_unlock_trigger: isUnlock
-            }
-        };
+    const id = document.getElementById('bpId').value.trim();
+    const payload = {
+        brainpass_id: id,
+        settings: {
+            point_reward: deviceState.point_reward,
+            lock_interval: deviceState.lock_interval,
+            is_app_active: document.getElementById('isAppActive').checked,
+            remote_unlock_trigger: isUnlock
+            // 🟢 Grade field is gone
+        }
+    };
 
         try {
             const response = await fetch(API_URL, {
@@ -283,5 +284,6 @@
 </body>
 
 </html>
+
 
 
