@@ -166,12 +166,37 @@
 
     // 1. Connect and Hydrate (Pull settings from S3)
     // 1. Updated Connect Function to actually READ the data
+async function fetchCurrentState(id) {
+    try {
+        const response = await fetch(`${S3_BASE}/${id}.json?t=${Date.now()}`);
+        if (!response.ok) return;
+        const data = await response.json();
+        
+        // SYNC POINTS: Read from the new 'total_points' field we added to the JSON
+        const points = data.settings.total_points || 0; 
+        document.getElementById('displayPoints').innerText = points.toLocaleString();
+        
+        // SYNC OTHER UI: Update toggle and chips to match tablet
+        document.getElementById('isAppActive').checked = data.settings.is_app_active;
+        updateChipUI(data.settings.lock_interval);
+        
+        // Hydrate local buffer so we don't overwrite settings on sync
+        deviceState = { ...data.settings, point_reward: 0 };
+        
+        document.getElementById('hubContent').style.display = 'block';
+    } catch (err) { console.log("Fetch error: " + err.message); }
+}
+
+// Update your connect button to call this:
 async function connectToDevice() {
     const id = document.getElementById('bpId').value.trim();
-    if (!id) return alert("Please enter a BrainPass ID");
-    
-    const btn = document.getElementById('connectBtn');
-    btn.innerText = "Connecting...";
+    if (id) {
+        await fetchCurrentState(id);
+        localStorage.setItem('bpId', id);
+        document.getElementById('connectBtn').innerText = "Connected ✓";
+        document.getElementById('connectBtn').style.background = "#00C853";
+    }
+}
 
     try {
         // This GET request pulls the current live file from S3
@@ -270,3 +295,4 @@ async function connectToDevice() {
 </body>
 
 </html>
+
