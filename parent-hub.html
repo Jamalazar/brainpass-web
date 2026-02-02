@@ -165,35 +165,41 @@
     };
 
     // 1. Connect and Hydrate (Pull settings from S3)
-    async function connectToDevice() {
-        const id = document.getElementById('bpId').value.trim();
-        if (!id) return alert("Enter BrainPass ID");
-        
-        const btn = document.getElementById('connectBtn');
-        btn.innerText = "Connecting...";
+    // 1. Updated Connect Function to actually READ the data
+async function connectToDevice() {
+    const id = document.getElementById('bpId').value.trim();
+    if (!id) return alert("Please enter a BrainPass ID");
+    
+    const btn = document.getElementById('connectBtn');
+    btn.innerText = "Connecting...";
 
-        try {
-            const response = await fetch(`${S3_BASE}/${id}.json?t=${Date.now()}`);
-            if (!response.ok) throw new Error("Not Found");
-            const data = await response.json();
-            
-            // Hydrate local state from device config
-            deviceState = { ...data.settings, point_reward: 0 };
-            
-            // Update UI components
-            document.getElementById('displayPoints').innerText = (data.settings.total_points || 0).toLocaleString();
-            document.getElementById('isAppActive').checked = data.settings.is_app_active;
-            document.getElementById('hubContent').style.display = 'block';
-            updateChipUI(data.settings.lock_interval);
-            
-            localStorage.setItem('bpId', id);
-            btn.innerText = "Connected ✓";
-            btn.style.background = "#00C853";
-        } catch (err) { 
-            alert("Device not found. Make sure the tablet has synced at least once."); 
-            btn.innerText = "Connect";
-        }
+    try {
+        // This GET request pulls the current live file from S3
+        const response = await fetch(`${S3_BASE}/${id}.json?t=${Date.now()}`);
+        if (!response.ok) throw new Error("Not Found");
+        const data = await response.json();
+        
+        // 🟢 SYNC POINTS: Read the total_points from S3
+        // If your Lambda uses 'total_points', read that here.
+        const points = data.settings.total_points || 0;
+        document.getElementById('displayPoints').innerText = points.toLocaleString();
+        
+        // Hydrate local state so your 'Submit' doesn't overwrite current settings
+        deviceState = { ...data.settings, point_reward: 0 };
+        
+        // Update UI components
+        document.getElementById('isAppActive').checked = data.settings.is_app_active;
+        document.getElementById('hubContent').style.display = 'block';
+        updateChipUI(data.settings.lock_interval);
+        
+        localStorage.setItem('bpId', id);
+        btn.innerText = "Connected ✓";
+        btn.style.background = "#00C853";
+    } catch (err) { 
+        alert("Device not found. Make sure the tablet has synced at least once."); 
+        btn.innerText = "Connect";
     }
+}
 
     // 2. Stage Changes Locally
     function stageReward(amt) {
@@ -262,4 +268,5 @@
     };
 </script>
 </body>
+
 </html>
