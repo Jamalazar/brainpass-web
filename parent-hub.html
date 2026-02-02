@@ -8,77 +8,300 @@
     <link rel="icon" type="image/png" href="favicon.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: sans-serif; background: #0f172a; color: white; padding: 20px; max-width: 500px; margin: auto; }
-        .card { background: #1e293b; padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 1px solid #334155; }
-        input, select, button { width: 100%; padding: 12px; margin: 8px 0; border-radius: 8px; border: none; box-sizing: border-box; }
-        input { background: #0f172a; color: white; border: 1px solid #40c4ff; }
-        button { background: #00e676; color: black; font-weight: bold; cursor: pointer; }
-        .unlock-btn { background: #40c4ff; margin-top: 20px; }
-        label { font-size: 0.8rem; color: #94a3b8; }
+        :root {
+            --bg-body: #0F172A;
+            --bg-card: #1E293B;
+            --primary: #00E676;
+            --accent-blue: #2979FF;
+            --accent-gold: #FFFFD700;
+            --accent-pink: #FF4081;
+            --text-main: #F8FAFC;
+            --text-muted: #94A3B8;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 { text-align: center; margin-bottom: 24px; letter-spacing: 1px; }
+
+        /* Shared Card Style */
+        .settings-group {
+            background: var(--bg-card);
+            border-radius: 24px;
+            padding: 20px;
+            margin-bottom: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* 1. Status Section */
+        .status-card { border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(0, 230, 118, 0.1); }
+        .status-header { display: flex; justify-content: space-between; align-items: flex-start; }
+        .status-info { display: flex; gap: 12px; }
+        .status-label { font-weight: 800; font-size: 0.9rem; color: var(--text-main); }
+        .status-subtext { font-size: 0.75rem; color: var(--text-muted); margin-top: 4px; }
+
+        /* 2. Wallet Section */
+        .wallet-card { border: 1px solid rgba(255, 215, 0, 0.3); }
+        .balance-label { color: var(--accent-gold); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; }
+        .balance-value { font-size: 2.8rem; font-weight: 900; margin: 5px 0 20px 0; }
+        
+        /* Reward Grid */
+        .reward-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+        .reward-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            padding: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.2s;
+        }
+        .reward-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.08); }
+        .icon-box { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
+        .reward-text div:first-child { font-weight: bold; font-size: 0.9rem; }
+        .reward-amount { font-size: 0.75rem; font-weight: 600; }
+
+        /* 3. Frequency Chips */
+        .chip-container { display: flex; gap: 8px; margin-top: 12px; }
+        .chip {
+            padding: 10px 18px;
+            background: #334155;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .chip.active { background: var(--primary); color: #000; }
+
+        /* ID Input */
+        .id-input {
+            background: #000;
+            border: 1px solid var(--accent-blue);
+            color: white;
+            padding: 12px;
+            border-radius: 12px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            letter-spacing: 2px;
+            text-align: center;
+            margin-top: 10px;
+            box-sizing: border-box;
+        }
+
+        /* Buttons */
+        .primary-btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+        .btn-unlock { background: var(--primary); color: #000; }
+        
+        /* Reports Card */
+        .reports-link {
+            background: rgba(0, 230, 118, 0.1);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(20px); background-color: #000; }
     </style>
 </head>
 <body>
+
+<div class="container">
     <h2>Parental Hub</h2>
-    
-    <div class="card">
-        <label>Child's BrainPass ID</label>
-        <input type="text" id="bpId" placeholder="e.g. BP-AVF8NZ" value="BP-AVF8NZ">
+
+    <div class="settings-group">
+        <label style="font-size: 0.7rem; color: var(--text-muted);">CHILD'S BRAINPASS ID</label>
+        <input type="text" id="bpId" class="id-input" placeholder="BP-XXXXXX" oninput="saveId()">
     </div>
 
-    <div class="card">
-        <label>Total Points (Adjustment Base)</label>
-        <input type="number" id="points" value="1000">
-
-        <label>Lock Interval (Minutes)</label>
-        <select id="interval">
-            <option value="15">15 Minutes</option>
-            <option value="30">30 Minutes</option>
-            <option value="60">1 Hour</option>
-        </select>
-
-        <label>Grade Level</label>
-        <select id="grade">
-            <option value="Grade 4">Grade 4</option>
-            <option value="Grade 5" selected>Grade 5</option>
-            <option value="Grade 6">Grade 6</option>
-        </select>
-
-        <button onclick="sendUpdate(false)">UPDATE SETTINGS</button>
-        <button class="unlock-btn" onclick="sendUpdate(true)">🔓 UNLOCK CHILD DEVICE NOW</button>
+    <div class="settings-group status-card">
+        <div class="status-header">
+            <div class="status-info">
+                <i class="fas fa-shield-alt" style="color: var(--primary); font-size: 1.8rem;"></i>
+                <div>
+                    <div class="status-label" id="statusLabel">SYSTEM ACTIVE</div>
+                    <div class="status-subtext">App is monitoring device usage.</div>
+                </div>
+            </div>
+            <label class="switch">
+                <input type="checkbox" id="isAppActive" checked onchange="updateStatusLabel()">
+                <span class="slider"></span>
+            </label>
+        </div>
+        <button class="primary-btn btn-unlock" onclick="sendRequest(true)">UNLOCK DEVICE NOW</button>
     </div>
 
-    <script>
-        const API_URL = "https://ywql4czvca.execute-api.us-east-1.amazonaws.com/prod/BrainPass_SettingsWriter"; // 🟢 PASTE YOUR URL HERE
+    <div class="settings-group wallet-card">
+        <div class="balance-label">STUDENT'S BALANCE</div>
+        <div class="balance-value" id="displayPoints">---</div>
+        
+        <label style="font-size: 0.7rem; color: var(--text-muted); font-weight: bold;">QUICK REWARDS</label>
+        <div class="reward-grid">
+            <div class="reward-btn" onclick="addReward(200, 'Chores')">
+                <div class="icon-box" style="background: rgba(0, 230, 118, 0.2); color: var(--primary);"><i class="fas fa-home"></i></div>
+                <div class="reward-text"><div>Chores</div><div class="reward-amount" style="color: var(--primary);">+200</div></div>
+            </div>
+            <div class="reward-btn" onclick="addReward(500, 'Homework')">
+                <div class="icon-box" style="background: rgba(41, 121, 255, 0.2); color: var(--accent-blue);"><i class="fas fa-book"></i></div>
+                <div class="reward-text"><div>Homework</div><div class="reward-amount" style="color: var(--accent-blue);">+500</div></div>
+            </div>
+            <div class="reward-btn" onclick="addReward(100, 'Behavior')">
+                <div class="icon-box" style="background: rgba(255, 64, 129, 0.2); color: var(--accent-pink);"><i class="fas fa-heart"></i></div>
+                <div class="reward-text"><div>Behavior</div><div class="reward-amount" style="color: var(--accent-pink);">+100</div></div>
+            </div>
+            <div class="reward-btn" onclick="alert('Custom amount coming soon!')">
+                <div class="icon-box" style="background: #334155; color: white;"><i class="fas fa-plus"></i></div>
+                <div class="reward-text"><div>Custom</div><div class="reward-amount" style="color: var(--text-muted);">Manual</div></div>
+            </div>
+        </div>
+    </div>
 
-        async function sendUpdate(isUnlockRequest) {
-            const id = document.getElementById('bpId').value;
-            const payload = {
-                brainpass_id: id,
-                settings: {
-					point_reward: parseInt(document.getElementById('points').value),
-                    total_points: parseInt(document.getElementById('points').value),
-                    lock_interval: parseInt(document.getElementById('interval').value),
-                    current_grade: document.getElementById('grade').value,
-                    is_app_active: true,
-                    school_code: "",
-                    remote_unlock_trigger: isUnlockRequest
-                }
-            };
+    <div class="settings-group">
+        <label style="font-weight: bold; font-size: 0.9rem;"><i class="fas fa-clock" style="color: var(--primary);"></i> Lock Frequency</label>
+        <div class="status-subtext" style="margin-bottom: 12px;">Screen will lock every X minutes.</div>
+        <div class="chip-container" id="chipContainer">
+            <div class="chip" data-val="15" onclick="selectChip(15)">15m</div>
+            <div class="chip" data-val="30" onclick="selectChip(30)">30m</div>
+            <div class="chip" data-val="60" onclick="selectChip(60)">1h</div>
+            <div class="chip" data-val="0" onclick="selectChip(0)">Pause Quiz</div>
+        </div>
+    </div>
 
-            try {
-                const response = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-        'Content-Type': 'application/json' // Crucial for matching CORS headers
-    },
-    body: JSON.stringify(payload)
-});
-                const data = await response.json();
-                alert(isUnlockRequest ? "Unlock Command Sent!" : "Settings Updated!");
-            } catch (err) {
-                alert("Error connecting to Lambda: " + err.message);
-            }
+    <div class="settings-group reports-link" onclick="alert('Report Card feature coming soon!')">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <i class="fas fa-list-ul" style="color: var(--primary); font-size: 1.2rem;"></i>
+            <div>
+                <div style="font-weight: bold; font-size: 0.95rem;">Report Card & History</div>
+                <div class="status-subtext">View grades and wallet logs</div>
+            </div>
+        </div>
+        <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
+    </div>
+</div>
+
+<script>
+    const API_URL = "https://ywql4czvca.execute-api.us-east-1.amazonaws.com/prod/BrainPass_SettingsWriter";
+    const S3_BASE = "https://brainpass-content.s3.us-east-1.amazonaws.com/configs";
+    let currentInterval = 15;
+    let currentBalance = 0;
+
+    // 1. Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+        const savedId = localStorage.getItem('bpId');
+        if (savedId) {
+            document.getElementById('bpId').value = savedId;
+            fetchCurrentState(savedId);
         }
-    </script>
+    });
+
+    function saveId() {
+        const id = document.getElementById('bpId').value;
+        localStorage.setItem('bpId', id);
+    }
+
+    // 2. Hydrate State (Fetch from S3)
+    async function fetchCurrentState(id) {
+        try {
+            const response = await fetch(`${S3_BASE}/${id}.json?t=${Date.now()}`);
+            if (!response.ok) throw new Error("ID not found");
+            const data = await response.json();
+            
+            // Update UI
+            currentBalance = data.settings.total_points || 0;
+            document.getElementById('displayPoints').innerText = currentBalance.toLocaleString();
+            document.getElementById('isAppActive').checked = data.settings.is_app_active;
+            selectChip(data.settings.lock_interval, false);
+            updateStatusLabel();
+        } catch (err) {
+            console.log("Could not fetch current state: " + err.message);
+        }
+    }
+
+    function selectChip(val, shouldUpdate = true) {
+        currentInterval = val;
+        document.querySelectorAll('.chip').forEach(c => {
+            c.classList.toggle('active', parseInt(c.dataset.val) === val);
+        });
+        if (shouldUpdate) sendRequest(false);
+    }
+
+    function updateStatusLabel() {
+        const active = document.getElementById('isAppActive').checked;
+        document.getElementById('statusLabel').innerText = active ? "SYSTEM ACTIVE" : "SYSTEM PAUSED";
+        document.getElementById('statusLabel').style.color = active ? "var(--primary)" : "var(--text-muted)";
+    }
+
+    // 3. Reward Point Logic
+    async function addReward(amount, label) {
+        // Option B Logic: We send the point_reward field
+        await sendRequest(false, amount);
+        alert(`Sent +${amount} points for ${label}!`);
+        // Manually update UI for immediate feedback
+        currentBalance += amount;
+        document.getElementById('displayPoints').innerText = currentBalance.toLocaleString();
+    }
+
+    // 4. Send Update to Lambda
+    async function sendRequest(isUnlockRequest, pointReward = 0) {
+        const id = document.getElementById('bpId').value;
+        if (!id) return alert("Please enter a BrainPass ID first");
+
+        const payload = {
+            brainpass_id: id,
+            settings: {
+                point_reward: pointReward,
+                lock_interval: currentInterval,
+                is_app_active: document.getElementById('isAppActive').checked,
+                current_grade: "Grade 5", // Default placeholder
+                school_code: "",
+                remote_unlock_trigger: isUnlockRequest
+            }
+        };
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            if (isUnlockRequest) alert("Unlock Command Sent!");
+        } catch (err) {
+            alert("Error: " + err.message);
+        }
+    }
+</script>
+
 </body>
 </html>
