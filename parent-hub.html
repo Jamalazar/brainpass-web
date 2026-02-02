@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>BrainPass - Smart Screen Time for Kids</title>
-    <meta name="description" content="Turn screen time into learning time. BrainPass requires kids to answer educational questions to unlock their apps.">
-    <link rel="icon" type="image/png" href="favicon.png">
+    <title>BrainPass Parent Hub</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root {
+            /* 🎨 THEME COLORS FROM ANDROID APP */
             --bg-body: #0F172A;
             --bg-card: #1E293B;
             --primary: #00E676;
@@ -36,7 +35,7 @@
 
         h2 { text-align: center; margin-bottom: 24px; letter-spacing: 1px; }
 
-        /* Shared Card Style */
+        /* Settings Group (Card Style) */
         .settings-group {
             background: var(--bg-card);
             border-radius: 24px;
@@ -57,7 +56,6 @@
         .balance-label { color: var(--accent-gold); font-size: 0.7rem; font-weight: 900; letter-spacing: 1px; }
         .balance-value { font-size: 2.8rem; font-weight: 900; margin: 5px 0 20px 0; }
         
-        /* Reward Grid */
         .reward-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
         .reward-btn {
             background: rgba(255, 255, 255, 0.03);
@@ -72,11 +70,9 @@
         }
         .reward-btn:active { transform: scale(0.96); background: rgba(255,255,255,0.08); }
         .icon-box { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; }
-        .reward-text div:first-child { font-weight: bold; font-size: 0.9rem; }
-        .reward-amount { font-size: 0.75rem; font-weight: 600; }
 
         /* 3. Frequency Chips */
-        .chip-container { display: flex; gap: 8px; margin-top: 12px; }
+        .chip-container { display: flex; gap: 8px; margin-top: 12px; overflow-x: auto; padding-bottom: 5px; }
         .chip {
             padding: 10px 18px;
             background: #334155;
@@ -85,6 +81,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: 0.2s;
+            white-space: nowrap;
         }
         .chip.active { background: var(--primary); color: #000; }
 
@@ -104,7 +101,7 @@
             box-sizing: border-box;
         }
 
-        /* Buttons */
+        /* Standard Buttons */
         .primary-btn {
             width: 100%;
             padding: 15px;
@@ -116,18 +113,8 @@
             margin-top: 20px;
         }
         .btn-unlock { background: var(--primary); color: #000; }
-        
-        /* Reports Card */
-        .reports-link {
-            background: rgba(0, 230, 118, 0.1);
-            border: 1px solid rgba(0, 230, 118, 0.2);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
 
-        /* Toggle Switch */
+        /* Toggle Switch Styling */
         .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
         .switch input { opacity: 0; width: 0; height: 0; }
         .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 24px; }
@@ -171,19 +158,19 @@
         <div class="reward-grid">
             <div class="reward-btn" onclick="addReward(200, 'Chores')">
                 <div class="icon-box" style="background: rgba(0, 230, 118, 0.2); color: var(--primary);"><i class="fas fa-home"></i></div>
-                <div class="reward-text"><div>Chores</div><div class="reward-amount" style="color: var(--primary);">+200</div></div>
+                <div><div style="font-weight:bold; font-size:0.9rem;">Chores</div><div style="color:var(--primary); font-size:0.75rem;">+200</div></div>
             </div>
             <div class="reward-btn" onclick="addReward(500, 'Homework')">
                 <div class="icon-box" style="background: rgba(41, 121, 255, 0.2); color: var(--accent-blue);"><i class="fas fa-book"></i></div>
-                <div class="reward-text"><div>Homework</div><div class="reward-amount" style="color: var(--accent-blue);">+500</div></div>
+                <div><div style="font-weight:bold; font-size:0.9rem;">Homework</div><div style="color:var(--accent-blue); font-size:0.75rem;">+500</div></div>
             </div>
             <div class="reward-btn" onclick="addReward(100, 'Behavior')">
                 <div class="icon-box" style="background: rgba(255, 64, 129, 0.2); color: var(--accent-pink);"><i class="fas fa-heart"></i></div>
-                <div class="reward-text"><div>Behavior</div><div class="reward-amount" style="color: var(--accent-pink);">+100</div></div>
+                <div><div style="font-weight:bold; font-size:0.9rem;">Behavior</div><div style="color:var(--accent-pink); font-size:0.75rem;">+100</div></div>
             </div>
-            <div class="reward-btn" onclick="alert('Custom amount coming soon!')">
+            <div class="reward-btn" onclick="alert('Custom manual reward coming soon!')">
                 <div class="icon-box" style="background: #334155; color: white;"><i class="fas fa-plus"></i></div>
-                <div class="reward-text"><div>Custom</div><div class="reward-amount" style="color: var(--text-muted);">Manual</div></div>
+                <div><div style="font-weight:bold; font-size:0.9rem;">Custom</div><div style="color:var(--text-muted); font-size:0.75rem;">Manual</div></div>
             </div>
         </div>
     </div>
@@ -199,25 +186,29 @@
         </div>
     </div>
 
-    <div class="settings-group reports-link" onclick="alert('Report Card feature coming soon!')">
-        <div style="display: flex; align-items: center; gap: 15px;">
-            <i class="fas fa-list-ul" style="color: var(--primary); font-size: 1.2rem;"></i>
-            <div>
-                <div style="font-weight: bold; font-size: 0.95rem;">Report Card & History</div>
-                <div class="status-subtext">View grades and wallet logs</div>
+    <div class="settings-group" style="background: rgba(0, 230, 118, 0.1); cursor: pointer;" onclick="alert('Coming soon!')">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <i class="fas fa-list-ul" style="color: var(--primary);"></i>
+                <div>
+                    <div style="font-weight: bold; font-size: 0.9rem;">Report Card & History</div>
+                    <div class="status-subtext">View grades and wallet logs</div>
+                </div>
             </div>
+            <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
         </div>
-        <i class="fas fa-chevron-right" style="color: var(--text-muted);"></i>
     </div>
 </div>
 
 <script>
+    // 🟢 CONFIGURATION
     const API_URL = "https://ywql4czvca.execute-api.us-east-1.amazonaws.com/prod/BrainPass_SettingsWriter";
     const S3_BASE = "https://brainpass-content.s3.us-east-1.amazonaws.com/configs";
+    
     let currentInterval = 15;
     let currentBalance = 0;
 
-    // 1. Initialize Page
+    // 🟢 INITIALIZATION
     document.addEventListener('DOMContentLoaded', () => {
         const savedId = localStorage.getItem('bpId');
         if (savedId) {
@@ -229,26 +220,30 @@
     function saveId() {
         const id = document.getElementById('bpId').value;
         localStorage.setItem('bpId', id);
+        if (id.length >= 6) fetchCurrentState(id);
     }
 
-    // 2. Hydrate State (Fetch from S3)
+    // 🟢 STATE HYDRATION (Pull live data from S3)
     async function fetchCurrentState(id) {
         try {
             const response = await fetch(`${S3_BASE}/${id}.json?t=${Date.now()}`);
-            if (!response.ok) throw new Error("ID not found");
+            if (!response.ok) return;
             const data = await response.json();
             
-            // Update UI
+            // Sync point total and status
             currentBalance = data.settings.total_points || 0;
             document.getElementById('displayPoints').innerText = currentBalance.toLocaleString();
             document.getElementById('isAppActive').checked = data.settings.is_app_active;
+            
+            // Sync chips
             selectChip(data.settings.lock_interval, false);
             updateStatusLabel();
-        } catch (err) {
-            console.log("Could not fetch current state: " + err.message);
+        } catch (err) { 
+            console.log("Fetch error: " + err.message); 
         }
     }
 
+    // 🟢 UI INTERACTIONS
     function selectChip(val, shouldUpdate = true) {
         currentInterval = val;
         document.querySelectorAll('.chip').forEach(c => {
@@ -263,20 +258,15 @@
         document.getElementById('statusLabel').style.color = active ? "var(--primary)" : "var(--text-muted)";
     }
 
-    // 3. Reward Point Logic
     async function addReward(amount, label) {
-        // Option B Logic: We send the point_reward field
         await sendRequest(false, amount);
         alert(`Sent +${amount} points for ${label}!`);
-        // Manually update UI for immediate feedback
-        currentBalance += amount;
-        document.getElementById('displayPoints').innerText = currentBalance.toLocaleString();
     }
 
-    // 4. Send Update to Lambda
+    // 🟢 REMOTE SYNC COMMAND (To AWS Lambda)
     async function sendRequest(isUnlockRequest, pointReward = 0) {
         const id = document.getElementById('bpId').value;
-        if (!id) return alert("Please enter a BrainPass ID first");
+        if (!id) return alert("Enter BrainPass ID first");
 
         const payload = {
             brainpass_id: id,
@@ -284,24 +274,21 @@
                 point_reward: pointReward,
                 lock_interval: currentInterval,
                 is_app_active: document.getElementById('isAppActive').checked,
-                current_grade: "Grade 5", // Default placeholder
-                school_code: "",
                 remote_unlock_trigger: isUnlockRequest
             }
         };
 
         try {
-            const response = await fetch(API_URL, {
+            await fetch(API_URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
             if (isUnlockRequest) alert("Unlock Command Sent!");
-        } catch (err) {
-            alert("Error: " + err.message);
+        } catch (err) { 
+            alert("Connection error: " + err.message); 
         }
     }
 </script>
-
 </body>
 </html>
