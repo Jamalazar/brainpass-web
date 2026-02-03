@@ -152,66 +152,41 @@
 </div>
 
 <script>
-    const API_URL = "https://ywql4czvca.execute-api.us-east-1.amazonaws.com/prod/BrainPass_SettingsWriter";
+    const API_URL = "https://ywql4czvca.execute-api.us-east-1.amazonaws.com/default/BrainPass_SettingsWriter";
     const S3_BASE = "https://brainpass-content.s3.us-east-1.amazonaws.com/configs";
 
-    // Local State Buffer to hold changes before syncing
+    // Local State Buffer
     let deviceState = {
         point_reward: 0,
         lock_interval: 15,
         is_app_active: true,
-        current_grade: "Grade 5",
+        current_grade: "Grade 5", // Will be updated by Connect
         school_code: ""
     };
 
-    // 1. Unified Connect and Hydrate function
+    // 1. Connect and Hydrate (Pull settings from S3)
     async function connectToDevice() {
-        const id = document.getElementById('bpId').value.trim();
-        if (!id) return alert("Please enter a BrainPass ID");
-        
-        const btn = document.getElementById('connectBtn');
-        btn.innerText = "Connecting...";
+    const id = document.getElementById('bpId').value.trim();
+    if (!id) return alert(\"Please enter a BrainPass ID\");
 
-        try {
-            // Fetch live data from S3
-            const response = await fetch(`${S3_BASE}/${id}.json?t=${Date.now()}`);
-            if (!response.ok) throw new Error("Device file not found in S3");
-            
-            const data = await response.json();
-            
-            // 🟢 POINT DISPLAY LOGIC
-            // We check for total_points first, then fallback to 0 if missing
-            const points = data.settings.total_points || 0;
-            document.getElementById('displayPoints').innerText = points.toLocaleString();
-            
-            // 🟢 HYDRATE UI & STATE
-            // Copy settings from S3 into our local buffer so we don't lose them
-            deviceState = { ...data.settings, point_reward: 0 };
-            
-            document.getElementById('isAppActive').checked = data.settings.is_app_active;
-            document.getElementById('hubContent').style.display = 'block';
-            
-            updateChipUI(data.settings.lock_interval);
-            updateStatusLabel();
-            
-            // Save ID for next time
-            localStorage.setItem('bpId', id);
-            
-            btn.innerText = "Connected ✓";
-            btn.style.background = "#00C853";
-        } catch (err) { 
-            console.error(err);
-            alert("Connection Failed: Make sure the tablet has synced at least once and the ID is correct."); 
-            btn.innerText = "Connect";
-            btn.style.background = "var(--accent-blue)";
-        }
+    // 🟢 V2 logic: We no longer check S3 first. 
+    // We assume the ID is valid and let the Lambda handle the DB update.
+    localStorage.setItem('bpId', id);
+    
+    // UI Updates
+    document.getElementById('setupSection').style.display = 'none';
+    document.getElementById('hubSection').style.display = 'block';
+    document.getElementById('displayId').innerText = id;
+    
+    console.log(\"Connected to Device via V2 (DynamoDB Mode)\");
+}   }
     }
 
-    // 2. Logic to stage changes locally (UI only)
+    // 2. Stage Changes Locally
     function stageReward(amt) {
         deviceState.point_reward += amt;
         document.getElementById('pendingPoints').innerText = `+${deviceState.point_reward}`;
-        showSubmitBar();
+        stageChange();
     }
 
     function customReward() {
@@ -222,16 +197,10 @@
     function stageInterval(val) {
         deviceState.lock_interval = val;
         updateChipUI(val);
-        showSubmitBar();
+        stageChange();
     }
 
-    function updateStatusLabel() {
-        const active = document.getElementById('isAppActive').checked;
-        document.getElementById('statusLabel').innerText = active ? "SYSTEM ACTIVE" : "SYSTEM PAUSED";
-        document.getElementById('statusLabel').style.color = active ? "var(--primary)" : "var(--text-muted)";
-    }
-
-    function showSubmitBar() {
+    function stageChange() {
         document.getElementById('submitBar').style.display = 'block';
     }
 
@@ -241,49 +210,44 @@
         });
     }
 
-    // 3. Final Sync to AWS Lambda
+    function triggerInstantUnlock() {
+        syncToDevice(true);
+    }
+
+    // 3. Sync to AWS (Final Submission)
     async function syncToDevice(isUnlock = false) {
     const id = document.getElementById('bpId').value.trim();
     const payload = {
         brainpass_id: id,
         settings: {
-            point_reward: deviceState.point_reward,
-            lock_interval: deviceState.lock_interval,
+            ...deviceState,
             is_app_active: document.getElementById('isAppActive').checked,
             remote_unlock_trigger: isUnlock
-            // 🟢 Grade field is gone
         }
     };
 
-        try {
-            const response = await fetch(API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
+    try {
+        const response = await fetch(API_URL, { // 🟢 Ensure API_URL is your Lambda endpoint
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+        
+        if (!response.ok) throw new Error(\"Server returned error\");
 
-            if (!response.ok) throw new Error("Lambda rejected the sync");
-
-            alert(isUnlock ? "Unlock sent!" : "Settings Saved!");
-            document.getElementById('submitBar').style.display = 'none';
-            
-            if (!isUnlock) {
-                deviceState.point_reward = 0; 
-                document.getElementById('pendingPoints').innerText = "+0";
-            }
-        } catch (err) { 
-            alert("Sync Error: " + err.message); 
-        }
+        alert(isUnlock ? \"Unlock sent!\" : \"Device Synced Successfully!\");
+        // ... rest of your existing logic
+    } catch (err) { 
+        console.error(err);
+        alert(\"Sync failed. Check your Lambda URL and CORS settings.\"); 
     }
+}
 
+    // Persistence Check
     window.onload = () => {
         const id = localStorage.getItem('bpId');
         if (id) document.getElementById('bpId').value = id;
     };
 </script>
 </body>
-
 </html>
-
-
-
