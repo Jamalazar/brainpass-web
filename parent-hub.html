@@ -152,34 +152,32 @@
 </div>
 
 <script>
+    // 🟢 REPLACE WITH YOUR ACTUAL LAMBDA URL
     const API_URL = "https://ywql4czvca.execute-api.us-east-1.amazonaws.com/default/BrainPass_SettingsWriter";
-    const S3_BASE = "https://brainpass-content.s3.us-east-1.amazonaws.com/configs";
 
     // Local State Buffer
     let deviceState = {
         point_reward: 0,
         lock_interval: 15,
         is_app_active: true,
-        current_grade: "Grade 5", // Will be updated by Connect
+        current_grade: "Grade 5",
         school_code: ""
     };
 
-    // 1. Connect and Hydrate (Pull settings from S3)
+    // 1. Connect and Hydrate (V2 Mode)
     async function connectToDevice() {
-    const id = document.getElementById('bpId').value.trim();
-    if (!id) return alert(\"Please enter a BrainPass ID\");
+        const id = document.getElementById('bpId').value.trim();
+        if (!id) return alert("Please enter a BrainPass ID");
 
-    // 🟢 V2 logic: We no longer check S3 first. 
-    // We assume the ID is valid and let the Lambda handle the DB update.
-    localStorage.setItem('bpId', id);
-    
-    // UI Updates
-    document.getElementById('setupSection').style.display = 'none';
-    document.getElementById('hubSection').style.display = 'block';
-    document.getElementById('displayId').innerText = id;
-    
-    console.log(\"Connected to Device via V2 (DynamoDB Mode)\");
-}   }
+        // Save to local storage for convenience
+        localStorage.setItem('bpId', id);
+        
+        // UI Updates: Show the hub, hide the setup
+        document.getElementById('hubContent').style.display = 'block';
+        document.getElementById('connectBtn').innerText = "Connected";
+        document.getElementById('connectBtn').style.background = "#475569";
+        
+        console.log("Connected to Device: " + id);
     }
 
     // 2. Stage Changes Locally
@@ -214,34 +212,39 @@
         syncToDevice(true);
     }
 
-    // 3. Sync to AWS (Final Submission)
+    // 3. Sync to AWS DynamoDB
     async function syncToDevice(isUnlock = false) {
-    const id = document.getElementById('bpId').value.trim();
-    const payload = {
-        brainpass_id: id,
-        settings: {
-            ...deviceState,
-            is_app_active: document.getElementById('isAppActive').checked,
-            remote_unlock_trigger: isUnlock
+        const id = document.getElementById('bpId').value.trim();
+        const payload = {
+            brainpass_id: id,
+            settings: {
+                ...deviceState,
+                is_app_active: document.getElementById('isAppActive').checked,
+                remote_unlock_trigger: isUnlock
+            }
+        };
+
+        try {
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            
+            if (!response.ok) throw new Error("Server error: " + response.status);
+
+            alert(isUnlock ? "Unlock sent!" : "Device Synced Successfully!");
+            document.getElementById('submitBar').style.display = 'none';
+            
+            if (!isUnlock) {
+                deviceState.point_reward = 0; 
+                document.getElementById('pendingPoints').innerText = "+0";
+            }
+        } catch (err) { 
+            console.error(err);
+            alert("Sync failed. Check your Lambda URL and CORS settings."); 
         }
-    };
-
-    try {
-        const response = await fetch(API_URL, { // 🟢 Ensure API_URL is your Lambda endpoint
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        
-        if (!response.ok) throw new Error(\"Server returned error\");
-
-        alert(isUnlock ? \"Unlock sent!\" : \"Device Synced Successfully!\");
-        // ... rest of your existing logic
-    } catch (err) { 
-        console.error(err);
-        alert(\"Sync failed. Check your Lambda URL and CORS settings.\"); 
     }
-}
 
     // Persistence Check
     window.onload = () => {
